@@ -1,0 +1,44 @@
+<robot name="kinect">
+    <KinBody name="kinectKinbody">
+	    <Body type="dynamic" name="kinectMain">
+	        <Geom type="box">
+	            <Render>./models/kinect.wrl</Render>
+	            <Extents>.02 .07 .01</Extents>
+	            <diffuseColor>0 0 0</diffuseColor>
+	            <transparency>0.5</transparency>
+	        </Geom>
+
+	    </Body>
+	    <Body name="kinectHead">
+	        <Geom type="box">
+	            <Translation>0 0 0.06</Translation>
+	            <Extents>.02 .1 .01</Extents>
+	            <diffuseColor>0 0 0</diffuseColor>
+	            <transparency>0.5</transparency>
+	        </Geom>
+
+	    </Body>
+		<Joint name="K1" type="hinge" enable="false">
+			<body>kinectMain</body>
+			<body>kinectHead</body>
+			<axis>0 1 0</axis>
+			<limits>0 0</limits>
+		</Joint>
+	    <translation>0.55 0 0.26</translation>
+	 </KinBody>
+	    
+	    <AttachedSensor name="depthMap">
+	        <link>kinectHead</link>
+	        <translation>0.028 0 0.0575</translation>
+            <rotationaxis>0 1 0  90</rotationaxis>
+            <rotationaxis>1 0 0 -90</rotationaxis>
+            <sensor type="BaseFlashLidar3D">
+                <maxrange>5</maxrange>
+                <time_scan>0.2</time_scan>
+                <KK>64 48 64 48</KK>
+                <width>128</width>
+                <height>96</height>
+                <color>.9 .9 0</color>
+            </sensor>
+	    </AttachedSensor>
+</robot>

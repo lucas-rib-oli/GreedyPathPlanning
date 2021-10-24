@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+# Authors: see AUTHORS.md at project root.
+# CopyPolicy: released under the terms of the LGPLv2.1, see LICENSE at project root.
+# URL: https://github.com/jgvictores/master-ipr
+
+# Dependencies:
+# - https://github.com/roboticslab-uc3m/openrave-yarp-plugins  (provides OpenraveYarpPluginLoader, YarpOpenraveRobotManager, YarpOpenraveRGBDSensor)
+# - https://github.com/asrob-uc3m/yarp-devices  (provides RobotServer)
+
+fileName="map1/openrave/map1.env.xml"
+
+if [ $# -eq 1 ]; then
+    fileName="$1/openrave/$1.env.xml"
+fi
+
+openrave --module OpenraveYarpPluginLoader "env $fileName open --device RobotServer --subdevice YarpOpenraveRobotManager --robotIndex 0 open --device RGBDSensorWrapper --subdevice YarpOpenraveRGBDSensor --robotIndex 0 --depthSensorIndex 0" --viewer qtcoin --collision ode
