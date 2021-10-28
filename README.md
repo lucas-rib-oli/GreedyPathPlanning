@@ -19,7 +19,7 @@ Entregable para la asignatura de Introducción a la Planificación de Robots del
 - Extra 12: El código se ha subido a un repositorio de [github](https://github.com/lucas-rib-oli/GreedyPathPlanning)
 - Extra 13: Se han realizado comparaciones del tiempo de ejecución y del número de iteraciones para cada algoritmo. Las tablas se adjuntan en este README.
 - Extra 14: Se ha habilitado la posibilidad de crear un video poniento el argumento --video a 1. (Nota: viz tiene que tener valor 1)
-- Extra 15: Se han grabado algunos videos [here] (videos/).
+- Extra 15: Se han grabado algunos videos [here](videos/).
 
 Para ejecutar el código:
 ```
