@@ -103,7 +103,7 @@ def dumpMap(charMap, currentX = -1, currentY = -1):
         i = i + 1
         print ()
 
-def dumpMapImage (charMap, currentX = -1, currentY = -1):
+def dumpMapImage (charMap, vwriter, args, currentX = -1, currentY = -1):
     
     charMap_copy = copy.deepcopy(charMap)
     
@@ -156,10 +156,12 @@ def dumpMapImage (charMap, currentX = -1, currentY = -1):
    
     gridMapImage_resized = cv2.resize (gridMapImage, (400, 500))
     cv2.imshow('Grid Map Image', gridMapImage_resized)
+    if (args.video):
+        vwriter.write (gridMapImage_resized)
     cv2.waitKey(10)                
 
 ## Salida de la ruta por imagen
-def dumpPathImage (charMap, nodes, goalParentId):
+def dumpPathImage (charMap, nodes, goalParentId, vwriter, args):
     charMap_copy = copy.deepcopy(charMap)
 
     ok = False
@@ -220,11 +222,13 @@ def dumpPathImage (charMap, nodes, goalParentId):
    
     gridMapImage_resized = cv2.resize (gridMapImage, (400, 500))
     cv2.imshow('Grid Map Image', gridMapImage_resized)
+    cv2.waitKey(100)
+    if(args.video):
+        vwriter.write (gridMapImage_resized)
     print (bcolors.BOLDBLUE + "Pulsa una tecla para terminar (con la imagen clickeada)" + bcolors.RESET)
-    cv2.waitKey(0)
 
 # Breadth First Search Algorithm
-def breadthFS (charMap, args):
+def breadthFS (charMap, args, vwriter):
     ## `nodes` contendrá los nodos visitados del grafo
     nodes_visited = []
     queue = [] # cola de nodos 
@@ -296,10 +300,10 @@ def breadthFS (charMap, args):
                  
         dumpMap(charMap, current.x, current.y)
         if (args.viz): # Mostrar imagen
-            dumpMapImage (charMap, current.x, current.y)
+            dumpMapImage (charMap, vwriter, args, current.x, current.y)
 
 # Depth First Search Algorithm
-def depthFS (charMap, args):
+def depthFS (charMap, args, vwriter):
     ## `nodes` contendrá los nodos del grafo
     nodes = []
     explored = []
@@ -365,10 +369,10 @@ def depthFS (charMap, args):
 
         dumpMap(charMap, node.x, node.y) # imprimimos mapa
         if (args.viz):
-            dumpMapImage (charMap, node.x, node.y)
+            dumpMapImage (charMap, vwriter, args, node.x, node.y)
 
 # Best First Search Algorithm
-def bestFS (charMap, args):
+def bestFS (charMap, args, vwriter):
     nodes = []
     ## creamos primer nodo
     init = Node(args.start_x, args.start_y, 0, -2)
@@ -438,12 +442,11 @@ def bestFS (charMap, args):
         queue.sort() # Ordenamos la cola de nodos por distancia mínima
         dumpMap(charMap, node.x, node.y)
         if (args.viz): # Mostrar por imagen   
-            dumpMapImage (charMap, node.x, node.y)
+            dumpMapImage (charMap, vwriter, args, node.x, node.y)
         
             
-
 class AStarNode:
-    def __init__(self, x, y, myId, parentId, gScore = -1, fScore = -1):
+    def __init__(self, x, y, myId, parentId):
         self.x = x
         self.y = y
         self.myId = myId
@@ -464,7 +467,7 @@ class AStarNode:
     def __eq__(self, neighbor):
         return self.x == neighbor.x and self.y == neighbor.y
 
-def a_estrellita (charMap, args):
+def a_estrellita (charMap, args, vwriter):
     # El conjunto de nodos descubiertos que pueden necesitar ser (re)ampliados.
     # Inicialmente, sólo se conoce el nodo inicial.
     # Esto se implementa normalmente como una cola de minisuperficie o de prioridad en lugar de un conjunto de hash.
@@ -574,7 +577,7 @@ def a_estrellita (charMap, args):
 
         dumpMap( charMap, current.x, current.y ) # imprimimos mapa
         if (args.viz): # Mostrar imagen
-            dumpMapImage ( charMap, current.x, current.y )
+            dumpMapImage ( charMap, vwriter, args, current.x, current.y )
 
 def euclideanDistance (x2, y2, x1, y1):
     return np.sqrt( np.power ( (x2 - x1), 2 ) + np.power ( (y2 - y1), 2 ) )
@@ -601,6 +604,7 @@ def main ():
     parser.add_argument("-n", "--neighbourhood", type=int, default=8, help="4 / 8 neighbourhood to use")
     parser.add_argument("-c", "--cost", type=str, default="euclidean", help="cost fuction to use - euclidean / manhattan")
     parser.add_argument("--viz", type=int, default=1, help="visualization in image")
+    parser.add_argument("--video", type=int, default=0, help="create a video")
     args = parser.parse_args()
     print (bcolors.BOLDBLUE+ "------------------------- PARAMETROS -------------------------" + bcolors.RESET)
     print (bcolors.BOLDGREEN + "Mapa: " + bcolors.BOLDCYAN + str(args.map))
@@ -613,6 +617,11 @@ def main ():
     print (bcolors.BOLDGREEN + "Funcion de coste: " + bcolors.BOLDCYAN + str(args.cost))
     print (bcolors.BOLDGREEN + "Visualizacion por imagen: " + bcolors.BOLDCYAN + str(args.viz))
     print (bcolors.BOLDBLUE + "--------------------------------------------------------------" + bcolors.RESET)
+
+    vwriter = -1
+    if (args.video):
+        video_output = os.path.join ( args.root, 'videos', 'video_out_' + args.algorithm + '_' + str(args.map) + '.avi')
+        vwriter = cv2.VideoWriter( video_output, cv2.VideoWriter_fourcc('M','J','P','G'), 10, (400, 500) )
 
     FILE_NAME = os.path.join (args.root, "map" + str(args.map), "map" + str(args.map) + ".csv")
 
@@ -643,13 +652,13 @@ def main ():
 
     start = time.time() # Para calcular el tiempo de ejecución
     if (ALGORITHM == "breadth"):
-        nodes, goalParentId, iterations = breadthFS (charMap, args)
+        nodes, goalParentId, iterations = breadthFS (charMap, args, vwriter)
     elif (ALGORITHM == "depth"):
-        nodes, goalParentId, iterations = depthFS (charMap, args)
+        nodes, goalParentId, iterations = depthFS (charMap, args, vwriter)
     elif (ALGORITHM == "best"):
-        nodes, goalParentId, iterations = bestFS (charMap, args)
+        nodes, goalParentId, iterations = bestFS (charMap, args, vwriter)
     elif (ALGORITHM == "a_star"):
-        nodes, goalParentId, iterations = a_estrellita (charMap, args)
+        nodes, goalParentId, iterations = a_estrellita (charMap, args, vwriter)
     else:
         print (bcolors.BOLDRED + "Algoritmo no implementado" + bcolors.RESET)
         print (bcolors.BOLDCYAN + "Se ejecutara:" + bcolors.BOLDCYAN + " Depth First Search Algorithm" + bcolors.RESET)
@@ -671,9 +680,10 @@ def main ():
                     ok = True
     print( bcolors.BOLDCYAN + 'Tiempo de ejecucion: ' + bcolors.BOLDYELLOW + str (np.round ( (end - start)*1000, 4 ) ) + ' milisegundos' + bcolors.RESET )
     print( bcolors.BOLDCYAN + 'Numero de iteraciones totales: ' + bcolors.BOLDYELLOW + str ( iterations ) + bcolors.RESET )
-    input ('pepe')
     if (args.viz):
-        dumpPathImage (charMap, nodes, goalParentId)
+        dumpPathImage (charMap, nodes, goalParentId, vwriter, args)
+    if (args.video):
+        vwriter.release()
     
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ if [ "$#" -lt 4 ]; then
 	echo "Se precisa: algorithm (breadth / depth / best / a_star) / neighbourhood (4 or 8) / cost (euclidean or manhattan) / viz (0 or 1)"
     exit
 fi
-# Example: bash execute_script.sh a_star 8 euclidean 0
+# Example: bash execute_script.sh depth 8 euclidean 1
 # ======================================================================== #
 
 # ======================================================================== #
@@ -35,6 +35,6 @@ pwd
 
 for map in 1 2 3 4 5 6 7 8 9 10 11 
 do
-	python main_greedy.py --root ${root} --map ${map} --start_x ${array_start_x[$map-1]} --start_y ${array_start_y[$map-1]} --end_x ${array_end_x[$map-1]} --end_y ${array_end_y[$map-1]} --algorithm ${algorithm} --neighbourhood ${neighbourhood} --cost ${cost} --viz ${viz}
+	python main_greedy.py --root ${root} --map ${map} --start_x ${array_start_x[$map-1]} --start_y ${array_start_y[$map-1]} --end_x ${array_end_x[$map-1]} --end_y ${array_end_y[$map-1]} --algorithm ${algorithm} --neighbourhood ${neighbourhood} --cost ${cost} --viz ${viz} --video 0
 done
 exit;
