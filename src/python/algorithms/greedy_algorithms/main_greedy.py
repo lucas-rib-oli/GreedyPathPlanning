@@ -79,6 +79,7 @@ class Node:
                          " | distancia " + str (self.dist))
     def __lt__(self, neighbor): # Para ordenar los nodos por distancia al objetivo
         return self.dist < neighbor.dist
+         
 
 ## creamos función para volcar estructura de datos para mapa
 def dumpMap(charMap, currentX = -1, currentY = -1):
@@ -109,8 +110,6 @@ def dumpMapImage (charMap, currentX = -1, currentY = -1):
     charMap_copy [currentX][currentY] = '5' # Nodo actual
     map_to_image = getMapInImageCoordinates (charMap_copy) # En coordenadas de una imagen
 
-   
-    
     row_step = len (charMap)
     col_step = len (charMap[0])
     rows = 50 * row_step
@@ -141,7 +140,7 @@ def dumpMapImage (charMap, currentX = -1, currentY = -1):
         br_point = br_points [i]
 
         if ( unordored_map [i] == '5' ): # Nodo actual
-            color = (100, 100, 100)
+            color = (0, 255, 0)
         elif ( unordored_map [i] == '0' ): # Celda libre
             color = (255, 255, 255)
         elif ( unordored_map [i] == '1' ): # Celda ocupada
@@ -157,7 +156,7 @@ def dumpMapImage (charMap, currentX = -1, currentY = -1):
    
     gridMapImage_resized = cv2.resize (gridMapImage, (400, 500))
     cv2.imshow('Grid Map Image', gridMapImage_resized)
-    cv2.waitKey(0)                
+    cv2.waitKey(10)                
 
 ## Salida de la ruta por imagen
 def dumpPathImage (charMap, nodes, goalParentId):
@@ -221,92 +220,82 @@ def dumpPathImage (charMap, nodes, goalParentId):
    
     gridMapImage_resized = cv2.resize (gridMapImage, (400, 500))
     cv2.imshow('Grid Map Image', gridMapImage_resized)
+    print (bcolors.BOLDBLUE + "Pulsa una tecla para terminar (con la imagen clickeada)" + bcolors.RESET)
     cv2.waitKey(0)
 
 # Breadth First Search Algorithm
 def breadthFS (charMap, args):
-    ## `nodes` contendrá los nodos del grafo
-    nodes = []
+    ## `nodes` contendrá los nodos visitados del grafo
+    nodes_visited = []
+    queue = [] # cola de nodos 
 
     ## creamos primer nodo
     init = Node(args.start_x, args.start_y, 0, -2)
     # init.dump()  # comprobar que primer nodo bien
 
-    ## añadimos el primer nodo a `nodos`
-    nodes.append(init)
+    queue.append (init) # Añadimos el primer nodo a la cola
 
     ## volcamos mapa por consola
     dumpMap(charMap)
 
     ###### Empieza algoritmo
-
-    done = False  # clásica condición de parada del bucle `while`
     goalParentId = -1  # -1: parentId del nodo goal PROVISIONAL cuando aun no se ha resuelto
 
-    while not done:
-        print("--------------------- number of nodes: "+str(len(nodes)))
-        for node in nodes:
-            node.dump()
+    n = 0 # simple contador de nodos
+    while len (queue) > 0: # mientras la cola no esté vacia 
+        
+        current = queue.pop (0) # El nodo actual es el primer nodo de la cola y borramos el nodo de la cola
 
-            # up
-            tmpX = node.x - 1
-            tmpY = node.y
-            if( charMap[tmpX][tmpY] == '4' ):
-                print("up: GOALLLL!!!")
-                goalParentId = node.myId  # aquí sustituye por real
-                done = True
-                return nodes, goalParentId
-            elif ( charMap[tmpX][tmpY] == '0' ):
-                print("up: mark visited")
-                newNode = Node(tmpX, tmpY, len(nodes), node.myId)
-                charMap[tmpX][tmpY] = '2'
-                nodes.append(newNode)
+        ## añadimos el nodo acutual a `nodes_visited`
+        nodes_visited.append(current)
+        print( "--------------------- number of nodes: " + str( len (nodes_visited) ) )
+        x = current.x
+        y = current.y
 
-            # down
-            tmpX = node.x + 1
-            tmpY = node.y
-            if( charMap[tmpX][tmpY] == '4' ):
-                print("down: GOALLLL!!!")
-                goalParentId = node.myId # aquí sustituye por real
-                done = True
-                return nodes, goalParentId
-            elif ( charMap[tmpX][tmpY] == '0' ):
-                print("down: mark visited")
-                newNode = Node(tmpX, tmpY, len(nodes), node.myId)
-                charMap[tmpX][tmpY] = '2'
-                nodes.append(newNode)
+        current.dump() # volcamos el nodo actual
 
-            # right
-            tmpX = node.x
-            tmpY = node.y + 1
-            if( charMap[tmpX][tmpY] == '4' ):
-                print("right: GOALLLL!!!")
-                goalParentId = node.myId # aquí sustituye por real
-                done = True
-                return nodes, goalParentId
-            elif ( charMap[tmpX][tmpY] == '0' ):
-                print("right: mark visited")
-                newNode = Node(tmpX, tmpY, len(nodes), node.myId)
-                charMap[tmpX][tmpY] = '2'
-                nodes.append(newNode)
+        if( charMap[x][y] == '4' ): # Si el nodo actual es la meta 
+            print ('nodo actual: GOLASOOO !!!')
+            goalParentId = current.myId
+            return nodes_visited, goalParentId 
 
-            # left
-            tmpX = node.x
-            tmpY = node.y - 1
-            if( charMap[tmpX][tmpY] == '4' ):
-                print("left: GOALLLL!!!")
-                goalParentId = node.myId # aquí sustituye por real
-                done = True
-                return nodes, goalParentId
-            elif ( charMap[tmpX][tmpY] == '0' ):
-                print("left: mark visited")
-                newNode = Node(tmpX, tmpY, len(nodes), node.myId)
-                charMap[tmpX][tmpY] = '2'
-                nodes.append(newNode)
+        if (args.neighbourhood == 4): # vecindad 4
+            neighbors_points = [NeighborsPoint (x - 1, y, "up"),
+                                NeighborsPoint (x, y + 1, "right"),
+                                NeighborsPoint (x + 1, y, "down"), 
+                                NeighborsPoint (x, y - 1, "left")]
+        else: # vecindad 8
+            neighbors_points = [NeighborsPoint (x - 1, y, "up"),
+                                NeighborsPoint (x - 1, y + 1, "up-right"),
+                                NeighborsPoint (x, y + 1, "right"),
+                                NeighborsPoint (x + 1, y + 1, "down-right"), 
+                                NeighborsPoint (x + 1, y, "down"), 
+                                NeighborsPoint (x + 1, y - 1, "down-left"),
+                                NeighborsPoint (x, y - 1, "left"),
+                                NeighborsPoint (x - 1, y - 1, "up-left")]
+        for neighbor_point in neighbors_points: # for each neighbor of current
+            n = n + 1 # incrementamos el contador
+            x_n = neighbor_point.x # coordenadas del nodo vecino
+            y_n = neighbor_point.y
+            position = neighbor_point.position # posicion del nodo vecino con respecto al nodo actual
+            
+            if( charMap[x_n][y_n] == '4' ):
+                print(position + ": GOALLLL!!!")
+                goalParentId = current.myId  # aquí sustituye por real
+                return nodes_visited, goalParentId
 
-            if (args.viz): # Mostrar imagen
-                dumpMap(charMap, node.x, node.y)
-                dumpMapImage (charMap, node.x, node.y)
+            if ( charMap[x_n][y_n] == '2' or  charMap[x_n][y_n] == '1' ): 
+                continue # continuamos si está visitado o es obstaculo
+
+            if ( charMap[x_n][y_n] == '0' ): # si está libre (no visitado) marcamos como visitado y lo añadimos a la cola
+                 print (position + ": mark visited")
+                 newNode = Node (x_n, y_n, n, current.myId)
+                 queue.append (newNode) # lo añadimos a la cola
+                 charMap[x_n][y_n] = '2' # marcamos como visitado
+                 
+        dumpMap(charMap, current.x, current.y)
+        if (args.viz): # Mostrar imagen
+            dumpMapImage (charMap, current.x, current.y)
 
 # Depth First Search Algorithm
 def depthFS (charMap, args):
@@ -327,7 +316,9 @@ def depthFS (charMap, args):
     goalParentId = -1  # -1: parentId del nodo goal PROVISIONAL cuando aun no se ha resuelto
 
     n = 0
+    iterations = 0
     while len (nodes) > 0: # Mientras nodes no esté vacio
+        iterations = iterations + 1 # Aumentamos el numero de iteraciones
         print("--------------------- number of nodes: " + str(len(nodes)))
         node = nodes.pop (-1) # Element that is inserted at the last or most recently inserted element.
         node.dump()
@@ -361,7 +352,7 @@ def depthFS (charMap, args):
             if( charMap[x_n][y_n] == '4' ):
                 print (position + ': GOLASOOO !!!')
                 goalParentId = node.myId
-                return explored, goalParentId
+                return explored, goalParentId, iterations
 
             if ( charMap[x_n][y_n] == '2' or  charMap[x_n][y_n] == '1' ): # si está ocupado o visitado cambiamos dirección
                 continue
@@ -371,8 +362,8 @@ def depthFS (charMap, args):
                 charMap[x_n][y_n] = '2'
                 nodes.append(newNode)
 
+        dumpMap(charMap, node.x, node.y) # imprimimos mapa
         if (args.viz):
-            dumpMap(charMap, node.x, node.y) # imprimimos mapa
             dumpMapImage (charMap, node.x, node.y)
 
 # Best First Search Algorithm
@@ -391,8 +382,10 @@ def bestFS (charMap, args):
     queue = [] # Nodos ordenados por distancia
     queue.append (init)
     n = 0
+    iterations = 0
     while len (queue) > 0: # Mientras la cola no esté vacia
 
+        iterations = iterations + 1 # Aumentamos el numero de iteraciones 
         # vértice de la lista con distancia mínima al objetivo
         node = queue.pop (0) # Eliminamos el nodo actual de la lista de nodos
         nodes.append(node) # Para realizar la regresión de los nodos
@@ -425,7 +418,7 @@ def bestFS (charMap, args):
             if( charMap[x_n][y_n] == '4' ):
                 print (position + ': GOLASOOO !!!')
                 goalParentId = node.myId
-                return nodes, goalParentId
+                return nodes, goalParentId, iterations
 
             if ( charMap[x_n][y_n] == '2' or  charMap[x_n][y_n] == '1'): # si está ocupado o visitado cambiamos dirección
                 continue
@@ -442,9 +435,11 @@ def bestFS (charMap, args):
                 queue.append (newNode)
         
         queue.sort() # Ordenamos la cola de nodos por distancia mínima
-        if (args.viz): # Mostrar imagen   
-            dumpMap(charMap, node.x, node.y)
+        dumpMap(charMap, node.x, node.y)
+        if (args.viz): # Mostrar por imagen   
             dumpMapImage (charMap, node.x, node.y)
+        
+            
 
 class AStarNode:
     def __init__(self, x, y, myId, parentId, gScore = -1, fScore = -1):
@@ -500,7 +495,9 @@ def a_estrellita (charMap, args):
 
 
     n = 0
+    iterations = 0
     while len (openSet) > 0: # while openSet is not empty
+        iterations = iterations + 1
         openSet.sort () # Ordenamos los nodos con el fScore más bajo
         # Esta operación puede producirse en tiempo O(1) si openSet es un miniapósito o una cola prioritaria
         # current := the node in openSet having the lowest fScore[] value
@@ -514,10 +511,7 @@ def a_estrellita (charMap, args):
         if( charMap[x][y] == '4' ): # Si el nodo actual es la meta 
             print ('nodo actual: GOLASOOO !!!')
             goalParentId = current.myId
-            return cameFrom, goalParentId
-
-        # if current = goal
-            # return reconstruct_path(cameFrom, current)
+            return cameFrom, goalParentId, iterations
 
         # Puntos vecinos
         if ( args.neighbourhood == 4): # Solo arriba, abajo, derecha e izquierda
@@ -546,7 +540,7 @@ def a_estrellita (charMap, args):
             if( charMap[x_n][y_n] == '4' ): # Si el nodo actual es la meta 
                 print (position + ': GOLASOOO !!!')
                 goalParentId = current.myId
-                return cameFrom, goalParentId
+                return cameFrom, goalParentId, iterations
 
             if ( charMap[x_n][y_n] == '2' or  charMap[x_n][y_n] == '1' ): # si está ocupado o visitado cambiamos dirección
                 continue
@@ -573,15 +567,13 @@ def a_estrellita (charMap, args):
                         n = n + 1
                         neighbor_node.myId = n
                         neighbor_node.parentId = current.myId
-                        neighbor_node.dump ()
                         openSet.append (neighbor_node) # if neighbor not in openSet
                         charMap[x_n][y_n] = '2'
 
 
+        dumpMap( charMap, current.x, current.y ) # imprimimos mapa
         if (args.viz): # Mostrar imagen
-            dumpMap( charMap, current.x, current.y ) # imprimimos mapa
             dumpMapImage ( charMap, current.x, current.y )
-        
 
 def euclideanDistance (x2, y2, x1, y1):
     return np.sqrt( np.power ( (x2 - x1), 2 ) + np.power ( (y2 - y1), 2 ) )
@@ -595,10 +587,10 @@ def getMapInImageCoordinates (grid_map):
     return map_to_image
 
 def main ():
-    os.system('cls||clear') # Limpiamos consola 
+    # os.system('cls||clear') # Limpiamos consola 
     parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser()
-    parser.add_argument("-r", "--root", type=str, default="/media/lsi/1C9E1EC99E1E9AFA/UC3M/Introduccion_Planificacion_Robots/master-ipr", help="path to folder map")
+    parser.add_argument("-r", "--root", type=str, default="/media/lsi/1C9E1EC99E1E9AFA/UC3M/Introduccion_Planificacion_Robots/GreedyPathPlanning", help="path to folder map")
     parser.add_argument("--map", type=int, default=1, help="number of map")
     parser.add_argument("--start_x", type=int, default=2, help="start coordinate x")
     parser.add_argument("--start_y", type=int, default=2, help="start coordinate y")
@@ -606,15 +598,26 @@ def main ():
     parser.add_argument("--end_y", type=int, default=2, help="end coordinate y")
     parser.add_argument("-a", "--algorithm", type=str, default="a_star", help="breadth / depth / best / a_star")
     parser.add_argument("-n", "--neighbourhood", type=int, default=8, help="4 / 8 neighbourhood to use")
-    parser.add_argument("-c", "--cost", type=str, default="euclidean", help="cost fuction to use - Euclidean / Manhattan")
-    parser.add_argument("--viz", type=bool, default=True, help="visualization in image")
+    parser.add_argument("-c", "--cost", type=str, default="euclidean", help="cost fuction to use - euclidean / manhattan")
+    parser.add_argument("--viz", type=int, default=1, help="visualization in image")
     args = parser.parse_args()
-    print(args)
+    print (args)
+    print (bcolors.BOLDBLUE+ "------------------------- PARAMETROS -------------------------" + bcolors.RESET)
+    print (bcolors.BOLDGREEN + "Mapa: " + bcolors.BOLDCYAN + str(args.map))
+    print (bcolors.BOLDGREEN + "Start X: " + bcolors.BOLDCYAN + str(args.start_x))
+    print (bcolors.BOLDGREEN + "Start Y: " + bcolors.BOLDCYAN + str(args.start_y))
+    print (bcolors.BOLDGREEN + "End X: " + bcolors.BOLDCYAN + str(args.end_x))
+    print (bcolors.BOLDGREEN + "End Y: " + bcolors.BOLDCYAN + str(args.end_y))
+    print (bcolors.BOLDGREEN + "Algoritmo: " + bcolors.BOLDCYAN + str(args.algorithm))
+    print (bcolors.BOLDGREEN + "Vecindad: " + bcolors.BOLDCYAN + str(args.neighbourhood))
+    print (bcolors.BOLDGREEN + "Funcion de coste: " + bcolors.BOLDCYAN + str(args.cost))
+    print (bcolors.BOLDGREEN + "Visualizacion por imagen: " + bcolors.BOLDCYAN + str(args.viz))
+    print (bcolors.BOLDBLUE + "--------------------------------------------------------------" + bcolors.RESET)
 
     FILE_NAME = os.path.join (args.root, "map" + str(args.map), "map" + str(args.map) + ".csv")
 
     if (not os.path.exists (FILE_NAME)):
-        print (bcolors.BOLDRED + "Path al mapa no encontrado" + bcolors.RESET )
+        print (bcolors.BOLDRED + "Path al mapa no encontrado: " + FILE_NAME + bcolors.RESET )
         exit (0)
     START_X = args.start_x
     START_Y = args.start_y
@@ -640,36 +643,38 @@ def main ():
 
     start = time.time() # Para calcular el tiempo de ejecución
     if (ALGORITHM == "breadth"):
-        nodes, goalParentId = breadthFS (charMap, args)
+        nodes, goalParentId, iterations = breadthFS (charMap, args)
     elif (ALGORITHM == "depth"):
-        nodes, goalParentId = depthFS (charMap, args)
+        nodes, goalParentId, iterations = depthFS (charMap, args)
     elif (ALGORITHM == "best"):
-        nodes, goalParentId = bestFS (charMap, args)
+        nodes, goalParentId, iterations = bestFS (charMap, args)
     elif (ALGORITHM == "a_star"):
-        nodes, goalParentId = a_estrellita (charMap, args)
+        nodes, goalParentId, iterations = a_estrellita (charMap, args)
     else:
-        print ("Algoritmo no implementado")
-        print ("Se ejecutara: Depth First Search Algorithm")
+        print (bcolors.BOLDRED + "Algoritmo no implementado" + bcolors.RESET)
+        print (bcolors.BOLDCYAN + "Se ejecutara:" + bcolors.BOLDCYAN + " Depth First Search Algorithm" + bcolors.RESET)
         nodes, goalParentId = depthFS (charMap)
 
     end = time.time()
-    dumpPathImage (charMap, nodes, goalParentId)
+    
+    goal_pared_id_aux = goalParentId
+    ## Fase de regresión 
     print('%%%%%%%%%%%%%%%%%%%')
     ok = False
     while not ok:
         for node in nodes:
-            if( node.myId == goalParentId ):
+            if( node.myId == goal_pared_id_aux ):
                 node.dump()
-                goalParentId = node.parentId
-                if( goalParentId == -2):
+                goal_pared_id_aux = node.parentId
+                if( goal_pared_id_aux == -2):
                     print("%%%%%%%%%%%%%%%%%2")
                     ok = True
-    
     print( bcolors.BOLDCYAN + 'Tiempo de ejecucion: ' + bcolors.BOLDYELLOW + str (np.round ( (end - start)*1000, 4 ) ) + ' milisegundos' + bcolors.RESET )
-
+    print( bcolors.BOLDCYAN + 'Numero de iteraciones totales: ' + bcolors.BOLDYELLOW + str ( iterations ) + bcolors.RESET )
+    if (args.viz):
+        dumpPathImage (charMap, nodes, goalParentId)
 
 if __name__ == '__main__':
-
     main()
 
 
