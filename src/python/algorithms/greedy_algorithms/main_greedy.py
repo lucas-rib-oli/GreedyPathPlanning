@@ -83,25 +83,25 @@ class Node:
 
 ## creamos función para volcar estructura de datos para mapa
 def dumpMap(charMap, currentX = -1, currentY = -1):
-        i = 0
-        for line in charMap:
-            j = 0
-            for point in line:
-                if i == currentX and j == currentY:
-                    print (bcolors.BOLDMAGENTA + point + bcolors.RESET + " ", end = '')
-                elif point == '0':
-                    print (bcolors.BOLDGREEN + point + bcolors.RESET + " ", end = '')
-                elif point == '1':
-                    print (bcolors.BOLDRED + point + bcolors.RESET + " ", end = '')
-                elif point == '2':
-                    print (bcolors.BOLDBLUE + point + bcolors.RESET + " ", end = '')
-                elif point == '3':
-                    print (bcolors.BOLDWHITE + point + bcolors.RESET + " ", end = '')
-                else:
-                    print (bcolors.BOLDYELLOW + point + bcolors.RESET + " ", end = '')
-                j = j + 1 
-            i = i + 1
-            print ()
+    i = 0
+    for line in charMap:
+        j = 0
+        for point in line:
+            if i == currentX and j == currentY:
+                print (bcolors.BOLDMAGENTA + point + bcolors.RESET + " ", end = '')
+            elif point == '0':
+                print (bcolors.BOLDGREEN + point + bcolors.RESET + " ", end = '')
+            elif point == '1':
+                print (bcolors.BOLDRED + point + bcolors.RESET + " ", end = '')
+            elif point == '2':
+                print (bcolors.BOLDBLUE + point + bcolors.RESET + " ", end = '')
+            elif point == '3':
+                print (bcolors.BOLDWHITE + point + bcolors.RESET + " ", end = '')
+            else:
+                print (bcolors.BOLDYELLOW + point + bcolors.RESET + " ", end = '')
+            j = j + 1 
+        i = i + 1
+        print ()
 
 def dumpMapImage (charMap, currentX = -1, currentY = -1):
     
@@ -588,7 +588,7 @@ def getMapInImageCoordinates (grid_map):
     return map_to_image
 
 def main ():
-    # os.system('cls||clear') # Limpiamos consola 
+    os.system('cls||clear') # Limpiamos consola 
     parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser()
     parser.add_argument("-r", "--root", type=str, default="/media/lsi/1C9E1EC99E1E9AFA/UC3M/Introduccion_Planificacion_Robots/GreedyPathPlanning", help="path to folder map")
@@ -602,7 +602,6 @@ def main ():
     parser.add_argument("-c", "--cost", type=str, default="euclidean", help="cost fuction to use - euclidean / manhattan")
     parser.add_argument("--viz", type=int, default=1, help="visualization in image")
     args = parser.parse_args()
-    print (args)
     print (bcolors.BOLDBLUE+ "------------------------- PARAMETROS -------------------------" + bcolors.RESET)
     print (bcolors.BOLDGREEN + "Mapa: " + bcolors.BOLDCYAN + str(args.map))
     print (bcolors.BOLDGREEN + "Start X: " + bcolors.BOLDCYAN + str(args.start_x))
@@ -672,8 +671,10 @@ def main ():
                     ok = True
     print( bcolors.BOLDCYAN + 'Tiempo de ejecucion: ' + bcolors.BOLDYELLOW + str (np.round ( (end - start)*1000, 4 ) ) + ' milisegundos' + bcolors.RESET )
     print( bcolors.BOLDCYAN + 'Numero de iteraciones totales: ' + bcolors.BOLDYELLOW + str ( iterations ) + bcolors.RESET )
+    input ('pepe')
     if (args.viz):
         dumpPathImage (charMap, nodes, goalParentId)
+    
 
 if __name__ == '__main__':
     main()

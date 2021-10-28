@@ -19,29 +19,306 @@ Entregable para la asignatura de Introducción a la Planificación de Robots del
 - Extra 10: El código se ha subido a un repositorio de github (ENLACE GITHUB)
 
 ## Tiempos de comparacion
+- Nota: Los tiempos de ejecución son calculados con una vecindad 8 y para los algoritmos no unitarios se ha usado la distancia euclidea como función de coste. Cabe destacar que si se eliminan todas las impresiones por consola claramente el tiempo de ejecución disminuría. 
 ### Breadth First Search
 <table><tbody>
 <!-- START TABLE -->
 <!-- TABLE HEADER -->
 <th valign="bottom">Mapa</th>
-<th valign="bottom">Tiempo de ejecución<br/>sched</th>
-<th valign="bottom">Número de iteraciones<br/>time<br/>(s/iter)</th>
+<th valign="bottom">Tiempo de ejecución<br/>(ms)</th>
+<th valign="bottom">Número de iteraciones</th>
 
 <!-- TABLE BODY -->
-<!-- ROW: Breadth First Search< -->
+<!-- ROW: Mapa 1 -->
  <tr><td align="left"><a href="map1/">1</a></td>
-<td align="center">1x</td>
-<td align="center">0.551</td>
+<td align="center">3.01</td>
+<td align="center">28</td>
 </tr>
-<!-- ROW: Depth First Search -->
+<!-- ROW: Mapa 2 -->
  <tr><td align="left"><a href="map2/">2</a></td>
-<td align="center">1x</td>
-<td align="center">0.380</td>
+<td align="center">13.75</td>
+<td align="center">62</td>
 </tr>
 
-<!-- ROW: A star  -->
+<!-- ROW: Mapa 3 -->
  <tr><td align="left"><a href="map3/">3</a></td>
-<td align="center">1x</td>
-<td align="center">0.380</td>
+<td align="center">145.98</td>
+<td align="center">251</td>
+</tr>
+
+<!-- ROW: Mapa 4 -->
+ <tr><td align="left"><a href="map4/">4</a></td>
+<td align="center">215.25</td>
+<td align="center">320</td>
+</tr>
+
+<!-- ROW: Mapa 5 -->
+ <tr><td align="left"><a href="map5/">5</a></td>
+<td align="center">364.29</td>
+<td align="center">409</td>
+</tr>
+
+<!-- ROW: Mapa 6 -->
+ <tr><td align="left"><a href="map6/">6</a></td>
+<td align="center">55.24</td>
+<td align="center">170</td>
+</tr>
+
+<!-- ROW: Mapa 7 -->
+ <tr><td align="left"><a href="map7/">7</a></td>
+<td align="center">363.71</td>
+<td align="center">411</td>
+</tr>
+
+<!-- ROW: Mapa 8 -->
+ <tr><td align="left"><a href="map8/">8</a></td>
+<td align="center">56.07</td>
+<td align="center">176</td>
+</tr>
+
+<!-- ROW: Mapa 9 -->
+ <tr><td align="left"><a href="map9/">9</a></td>
+<td align="center">420.94</td>
+<td align="center">449</td>
+</tr>
+
+<!-- ROW: Mapa 10 -->
+ <tr><td align="left"><a href="map10/">10</a></td>
+<td align="center">835.63</td>
+<td align="center">647</td>
+</tr>
+
+<!-- ROW: Mapa 11 -->
+ <tr><td align="left"><a href="map11/">11</a></td>
+<td align="center">632.38</td>
+<td align="center">492</td>
+</tr>
+</tbody></table>
+
+
+### Depth First Search Algorithm
+<table><tbody>
+<!-- START TABLE -->
+<!-- TABLE HEADER -->
+<th valign="bottom">Mapa</th>
+<th valign="bottom">Tiempo de ejecución<br/>(ms)</th>
+<th valign="bottom">Número de iteraciones</th>
+
+<!-- TABLE BODY -->
+<!-- ROW: Mapa 1 -->
+ <tr><td align="left"><a href="map1/">1</a></td>
+<td align="center">1.05</td>
+<td align="center">9</td>
+</tr>
+<!-- ROW: Mapa 2 -->
+ <tr><td align="left"><a href="map2/">2</a></td>
+<td align="center">6.99</td>
+<td align="center">23</td>
+</tr>
+
+<!-- ROW: Mapa 3 -->
+ <tr><td align="left"><a href="map3/">3</a></td>
+<td align="center">88.33</td>
+<td align="center">157</td>
+</tr>
+
+<!-- ROW: Mapa 4 -->
+ <tr><td align="left"><a href="map4/">4</a></td>
+<td align="center">58.28</td>
+<td align="center">108</td>
+</tr>
+
+<!-- ROW: Mapa 5 -->
+ <tr><td align="left"><a href="map5/">5</a></td>
+<td align="center">54.79</td>
+<td align="center">82</td>
+</tr>
+
+<!-- ROW: Mapa 6 -->
+ <tr><td align="left"><a href="map6/">6</a></td>
+<td align="center">16.19</td>
+<td align="center">43</td>
+</tr>
+
+<!-- ROW: Mapa 7 -->
+ <tr><td align="left"><a href="map7/">7</a></td>
+<td align="center">188.68</td>
+<td align="center">201</td>
+</tr>
+
+<!-- ROW: Mapa 8 -->
+ <tr><td align="left"><a href="map8/">8</a></td>
+<td align="center">37.67</td>
+<td align="center">99</td>
+</tr>
+
+<!-- ROW: Mapa 9 -->
+ <tr><td align="left"><a href="map9/">9</a></td>
+<td align="center">304.71</td>
+<td align="center">308</td>
+</tr>
+
+<!-- ROW: Mapa 10 -->
+ <tr><td align="left"><a href="map10/">10</a></td>
+<td align="center">136.48</td>
+<td align="center">103</td>
+</tr>
+
+<!-- ROW: Mapa 11 -->
+ <tr><td align="left"><a href="map11/">11</a></td>
+<td align="center">43.69</td>
+<td align="center">43</td>
+</tr>
+</tbody></table>
+
+
+### Best First Search Algorithm
+<table><tbody>
+<!-- START TABLE -->
+<!-- TABLE HEADER -->
+<th valign="bottom">Mapa</th>
+<th valign="bottom">Tiempo de ejecución<br/>(ms)</th>
+<th valign="bottom">Número de iteraciones</th>
+
+<!-- TABLE BODY -->
+<!-- ROW: Mapa 1 -->
+ <tr><td align="left"><a href="map1/">1</a></td>
+<td align="center">1.95</td>
+<td align="center">6</td>
+</tr>
+<!-- ROW: Mapa 2 -->
+ <tr><td align="left"><a href="map2/">2</a></td>
+<td align="center">2.39</td>
+<td align="center">13</td>
+</tr>
+
+<!-- ROW: Mapa 3 -->
+ <tr><td align="left"><a href="map3/">3</a></td>
+<td align="center">49.67</td>
+<td align="center">102</td>
+</tr>
+
+<!-- ROW: Mapa 4 -->
+ <tr><td align="left"><a href="map4/">4</a></td>
+<td align="center">146.25</td>
+<td align="center">209</td>
+</tr>
+
+<!-- ROW: Mapa 5 -->
+ <tr><td align="left"><a href="map5/">5</a></td>
+<td align="center">145.90</td>
+<td align="center">164</td>
+</tr>
+
+<!-- ROW: Mapa 6 -->
+ <tr><td align="left"><a href="map6/">6</a></td>
+<td align="center">19.89</td>
+<td align="center">59</td>
+</tr>
+
+<!-- ROW: Mapa 7 -->
+ <tr><td align="left"><a href="map7/">7</a></td>
+<td align="center">139.67</td>
+<td align="center">140</td>
+</tr>
+
+<!-- ROW: Mapa 8 -->
+ <tr><td align="left"><a href="map8/">8</a></td>
+<td align="center">8.51</td>
+<td align="center">30</td>
+</tr>
+
+<!-- ROW: Mapa 9 -->
+ <tr><td align="left"><a href="map9/">9</a></td>
+<td align="center">48.97</td>
+<td align="center">68</td>
+</tr>
+
+<!-- ROW: Mapa 10 -->
+ <tr><td align="left"><a href="map10/">10</a></td>
+<td align="center">310.38</td>
+<td align="center">244</td>
+</tr>
+
+<!-- ROW: Mapa 11 -->
+ <tr><td align="left"><a href="map11/">11</a></td>
+<td align="center">210</td>
+<td align="center">174</td>
+</tr>
+</tbody></table>
+
+
+### A estrellita Algorithm
+<table><tbody>
+<!-- START TABLE -->
+<!-- TABLE HEADER -->
+<th valign="bottom">Mapa</th>
+<th valign="bottom">Tiempo de ejecución<br/>(ms)</th>
+<th valign="bottom">Número de iteraciones</th>
+
+<!-- TABLE BODY -->
+<!-- ROW: Mapa 1 -->
+ <tr><td align="left"><a href="map1/">1</a></td>
+<td align="center">1.663</td>
+<td align="center">9</td>
+</tr>
+<!-- ROW: Mapa 2 -->
+ <tr><td align="left"><a href="map2/">2</a></td>
+<td align="center">5.794</td>
+<td align="center">31</td>
+</tr>
+
+<!-- ROW: Mapa 3 -->
+ <tr><td align="left"><a href="map3/">3</a></td>
+<td align="center">136.56</td>
+<td align="center">202</td>
+</tr>
+
+<!-- ROW: Mapa 4 -->
+ <tr><td align="left"><a href="map4/">4</a></td>
+<td align="center">202.51</td>
+<td align="center">285</td>
+</tr>
+
+<!-- ROW: Mapa 5 -->
+ <tr><td align="left"><a href="map5/">5</a></td>
+<td align="center">250.91</td>
+<td align="center">274</td>
+</tr>
+
+<!-- ROW: Mapa 6 -->
+ <tr><td align="left"><a href="map6/">6</a></td>
+<td align="center">45.76</td>
+<td align="center">89</td>
+</tr>
+
+<!-- ROW: Mapa 7 -->
+ <tr><td align="left"><a href="map7/">7</a></td>
+<td align="center">291.70</td>
+<td align="center">309</td>
+</tr>
+
+<!-- ROW: Mapa 8 -->
+ <tr><td align="left"><a href="map8/">8</a></td>
+<td align="center">45.92</td>
+<td align="center">118</td>
+</tr>
+
+<!-- ROW: Mapa 9 -->
+ <tr><td align="left"><a href="map9/">9</a></td>
+<td align="center">151</td>
+<td align="center">164</td>
+</tr>
+
+<!-- ROW: Mapa 10 -->
+ <tr><td align="left"><a href="map10/">10</a></td>
+<td align="center">468.77</td>
+<td align="center">356</td>
+</tr>
+
+<!-- ROW: Mapa 11 -->
+ <tr><td align="left"><a href="map11/">11</a></td>
+<td align="center">373.09</td>
+<td align="center">239</td>
 </tr>
 </tbody></table>
