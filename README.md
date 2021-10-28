@@ -261,7 +261,7 @@ $ bash execute_script.sh depth 8 euclidean 1
 </tbody></table>
 
 
-### A estrellita Algorithm
+### A Star Algorithm
 <table><tbody>
 <!-- START TABLE -->
 <!-- TABLE HEADER -->
