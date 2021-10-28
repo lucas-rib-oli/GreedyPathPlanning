@@ -467,7 +467,7 @@ class AStarNode:
     def __eq__(self, neighbor):
         return self.x == neighbor.x and self.y == neighbor.y
 
-def a_estrellita (charMap, args, vwriter):
+def a_star (charMap, args, vwriter):
     # El conjunto de nodos descubiertos que pueden necesitar ser (re)ampliados.
     # Inicialmente, sólo se conoce el nodo inicial.
     # Esto se implementa normalmente como una cola de minisuperficie o de prioridad en lugar de un conjunto de hash.
@@ -658,7 +658,7 @@ def main ():
     elif (ALGORITHM == "best"):
         nodes, goalParentId, iterations = bestFS (charMap, args, vwriter)
     elif (ALGORITHM == "a_star"):
-        nodes, goalParentId, iterations = a_estrellita (charMap, args, vwriter)
+        nodes, goalParentId, iterations = a_star (charMap, args, vwriter)
     else:
         print (bcolors.BOLDRED + "Algoritmo no implementado" + bcolors.RESET)
         print (bcolors.BOLDCYAN + "Se ejecutara:" + bcolors.BOLDCYAN + " Depth First Search Algorithm" + bcolors.RESET)

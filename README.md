@@ -2,7 +2,7 @@
 Entregable para la asignatura de Introducción a la Planificación de Robots del Máster de Robótica y Automatización (UC3M)
 
 - Se ha implementado el algoritmo Depth First Search Algorithm como algoritmo greedy necesario para el punto de este trabajo.
-- Las tareas realizadas se encuentran implementadas en un fichero .py [here](src/python/greedy_algorithms.py) donde se encuentran los distintos algoritmos greedy implementados
+- Las tareas realizadas se encuentran implementadas en un fichero .py [here](src/python/algorithms/greedy_algorithms/main_greedy.py) donde se encuentran los distintos algoritmos greedy implementados
 
 # Extras
 - Extra 1: Se ha realizado una modificación del código original (Breadth First Search) con el mismo funcionamiento, los cambios se basan en no tener tantas condiciones "if" y hacer el código más escalable a la hora de analizar la vecindad 8.
