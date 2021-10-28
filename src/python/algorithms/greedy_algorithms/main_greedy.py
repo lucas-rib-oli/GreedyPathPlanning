@@ -242,8 +242,9 @@ def breadthFS (charMap, args):
     goalParentId = -1  # -1: parentId del nodo goal PROVISIONAL cuando aun no se ha resuelto
 
     n = 0 # simple contador de nodos
+    iterations = 0 # numero de iteraciones a 0
     while len (queue) > 0: # mientras la cola no esté vacia 
-        
+        iterations = iterations + 1
         current = queue.pop (0) # El nodo actual es el primer nodo de la cola y borramos el nodo de la cola
 
         ## añadimos el nodo acutual a `nodes_visited`
@@ -257,7 +258,7 @@ def breadthFS (charMap, args):
         if( charMap[x][y] == '4' ): # Si el nodo actual es la meta 
             print ('nodo actual: GOLASOOO !!!')
             goalParentId = current.myId
-            return nodes_visited, goalParentId 
+            return nodes_visited, goalParentId, iterations
 
         if (args.neighbourhood == 4): # vecindad 4
             neighbors_points = [NeighborsPoint (x - 1, y, "up"),
@@ -282,7 +283,7 @@ def breadthFS (charMap, args):
             if( charMap[x_n][y_n] == '4' ):
                 print(position + ": GOALLLL!!!")
                 goalParentId = current.myId  # aquí sustituye por real
-                return nodes_visited, goalParentId
+                return nodes_visited, goalParentId, iterations
 
             if ( charMap[x_n][y_n] == '2' or  charMap[x_n][y_n] == '1' ): 
                 continue # continuamos si está visitado o es obstaculo

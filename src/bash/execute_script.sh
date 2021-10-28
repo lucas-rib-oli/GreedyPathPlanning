@@ -6,6 +6,7 @@ if [ "$#" -lt 4 ]; then
 	echo "Se precisa: algorithm (breadth / depth / best / a_star) / neighbourhood (4 or 8) / cost (euclidean or manhattan) / viz (0 or 1)"
     exit
 fi
+# Example: bash execute_script.sh breadth 4 euclidean 0
 # ======================================================================== #
 
 # ======================================================================== #
